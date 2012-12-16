@@ -23,7 +23,7 @@
 
 
 // pulse sensor variables
-int pulsePin = 0;          // pulse sensor purple wire connected to analog pin 0
+// int pulsePin = 0;          // pulse sensor purple wire connected to analog pin 0
 int fadeRate = 0;          // used to fade LED on PWM pin 11
                                     // these are volatile because they are used during the interrupt!
 volatile int BPM;                   // used to hold the pulse rate
@@ -33,7 +33,7 @@ volatile boolean Pulse = false;     // true when pulse wave is high, false when 
 volatile boolean QS = false;        // becomes true when pulse rate is determined. every 20 pulses
 
 
-int pulsePin = 2; // button with 10k to gnd
+int pulsePin = 2; // button with 10k to gnd, this simulates the pulse from the pulse sensor
 int localHbLed = 13; // LED to gnd
 int remoteHbLed = 12; // LED to gnd
 

@@ -1,4 +1,4 @@
-// PulseSensor2Way
+// PulseSensorSwitchTest
 // the code is a preliminary test to hooking up the PulseSensor
 // it shows how to hook up a switch to a local input
 // turn on a local LED

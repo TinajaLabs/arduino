@@ -150,7 +150,9 @@ void loop(){
     fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
     // sendDataToProcessing('B',BPM);   // send heart rate with a 'B' prefix
     // sendDataToProcessing('Q',IBI);   // send time between beats with a 'Q' prefix
-    sendDataToMirror('B',BPM);        // send data to the mirrored system      
+
+    sendDataToMirror('B',BPM);        // send data to the mirrored system
+    setLocalLED(BPM);
     QS = false;                      // reset the Quantified Self flag for next time    
   }
 
@@ -240,6 +242,48 @@ void setRemoteLED(char* serialCode){
 
 }
 
+// set the color of the remote RGB LED
+void setLocalLED(int bpm){
+  int beatValue = bpm;
+
+  if (beatValue < 70) {
+    setLedColorLocal(white);
+    // Serial.print("set: white, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else if (beatValue >= 71 && beatValue <= 80) {
+    setLedColorLocal(yellow);
+    // Serial.print("set: yellow, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else if (beatValue >= 81 && beatValue <= 90) {
+    setLedColorLocal(green);
+    // Serial.print("set: green, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else if (beatValue >= 91 && beatValue <= 100) {
+    setLedColorLocal(blue);
+    // Serial.print("set: blue, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else if (beatValue >= 101 && beatValue <= 120) {
+    setLedColorLocal(purple);
+    // Serial.print("set: purple, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else if (beatValue >= 121 && beatValue <= 150) {
+    setLedColorLocal(red);
+    // Serial.print("set: red, recd: ");
+    // Serial.println(beatValue);
+  } 
+  else {
+    setLedColorLocal(white);
+    // Serial.print("set: white high, recd: ");
+    // Serial.println(beatValue);
+  }
+
+}
+
 void ledFadeToBeat(){
   fadeRate -= 15;                         //  set LED fade value
   fadeRate = constrain(fadeRate,0,255);   //  keep LED fade value from going into negative numbers!
@@ -251,6 +295,7 @@ void sendDataToProcessing(char symbol, int data ){
   Serial.println(data);                // the data to send culminating in a carriage return
 }
 
+// send data to remote/mirror system
 void sendDataToMirror(char symbol, int data ){
   // Serial.print("sending to mirror: "); // show what we're sending
   // Serial.println(data);                // the data to send culminating in a carriage return

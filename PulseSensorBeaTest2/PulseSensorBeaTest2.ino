@@ -69,7 +69,7 @@ String thisVersion = versString + majorVersion + "." + minorVersion +"." + build
 int pulsePin = 0;                 // Pulse Sensor purple wire connected to analog pin 0
 int blinkPin = 13;                // pin to blink led at each beat
 int fadePin = 5;                  // pin to do fancy classy fading blink at each beat
-int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
+int fadeRate = 255;                 // de3fault = 0, used to fade LED on with PWM on fadePin
 
 // RGB variables for remote LED
 int grnLedPinRem = 3;  // Green LED, connected to digital pin 5
@@ -82,30 +82,30 @@ int bluLedPinLoc = 7;  // Blue LED,  connected to digital pin 7
 int redLedPinLoc = 8;   // Red LED,   connected to digital pin 8
 
 // Color arrays, RGB
-//int black[3]  = { 0, 0, 0 };
-//int white[3]  = { 80, 100, 100 };
-//int red[3]    = { 100, 0, 0 };
-//int green[3]  = { 0, 100, 0 };
-//int blue[3]   = { 0, 0, 100 };
-//int bluegreen[3]   = { 0, 100, 20 };
-//int dimwhite[3] = { 55, 55, 55 };
-//int purple[3] = { 80, 0, 80 };
-//int pink[3] = { 55, 0, 70 };
-//int orange[3] = { 55, 40, 0 };
-//int yellow[3] = { 100, 90, 0 };
+int black[3]  = { 0, 0, 0 };
+int white[3]  = { 80, 100, 100 };
+int red[3]    = { 100, 0, 0 };
+int green[3]  = { 0, 100, 0 };
+int blue[3]   = { 0, 0, 100 };
+int bluegreen[3]   = { 0, 100, 20 };
+int dimwhite[3] = { 55, 55, 55 };
+int purple[3] = { 80, 0, 80 };
+int pink[3] = { 55, 0, 70 };
+int orange[3] = { 55, 40, 0 };
+int yellow[3] = { 100, 90, 0 };
   
 // Color arrays, RGB - common anode
-int black[3]  = { 100, 100, 100 };
-int white[3]  = { 20, 0, 0 };
-int red[3]    = { 0, 100, 100 };
-int green[3]  = { 100, 0, 100 };
-int blue[3]   = { 100, 100, 0 };
-int bluegreen[3]   = { 100, 0, 80 };
-int dimwhite[3] = { 45, 45, 45 };
-int purple[3] = { 20, 100, 20 };
-int pink[3] = { 45, 100, 30 };
-int orange[3] = { 45, 60, 100 };
-int yellow[3] = { 0, 10, 100 };
+//int black[3]  = { 100, 100, 100 };
+//int white[3]  = { 20, 0, 0 };
+//int red[3]    = { 0, 100, 100 };
+//int green[3]  = { 100, 0, 100 };
+//int blue[3]   = { 100, 100, 0 };
+//int bluegreen[3]   = { 100, 0, 80 };
+//int dimwhite[3] = { 45, 45, 45 };
+//int purple[3] = { 20, 100, 20 };
+//int pink[3] = { 45, 100, 30 };
+//int orange[3] = { 45, 60, 100 };
+//int yellow[3] = { 0, 10, 100 };
 
 
 const int terminatingChar = 13; // Terminate lines with CR
@@ -152,56 +152,17 @@ void setup(){
 // ==================================================================
 void loop(){
 
-  // sendDataToProcessing('S', Signal);     // send Processing the raw Pulse Sensor data
-  if (QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
-    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
-    // sendDataToProcessing('B',BPM);   // send heart rate with a 'B' prefix
-    // sendDataToProcessing('Q',IBI);   // send time between beats with a 'Q' prefix
+    setLedColorRemote(red);
+    delay(500);
+    setLedColorRemote(green);
+    delay(500);
 
-    sendDataToMirror('B',BPM);        // send data to the mirrored system
-    setLocalLED(BPM);
-    QS = false;                      // reset the Quantified Self flag for next time    
-  }
-
-  // listen for instructions from serial port
-  char* mySerialVal = serialReader();
-  if (mySerialVal != "n" ) {
-
-    // respond to instructions
-    // Serial.print("received: ");  
-    // Serial.println(mySerialVal);
-
-    // respond to color commands for the RGB LED
-    if (strcmp(mySerialVal, "black") == 0)  setLedColorLocal(black);
-    if (strcmp(mySerialVal, "white") == 0)  setLedColorLocal(white);
-    if (strcmp(mySerialVal, "red") == 0)  setLedColorLocal(red);
-    if (strcmp(mySerialVal, "green") == 0)  setLedColorLocal(green); 
-    if (strcmp(mySerialVal, "blue") == 0)  setLedColorLocal(blue);
-    if (strcmp(mySerialVal, "yellow") == 0)  setLedColorLocal(yellow);
-    if (strcmp(mySerialVal, "dimwhite") == 0)  setLedColorLocal(dimwhite);
-    if (strcmp(mySerialVal, "orange") == 0)  setLedColorLocal(orange);    
-    if (strcmp(mySerialVal, "purple") == 0)  setLedColorLocal(purple);
-    if (strcmp(mySerialVal, "pink") == 0)  setLedColorLocal(pink);
-    if (strcmp(mySerialVal, "bluegreen") == 0)  setLedColorLocal(bluegreen);
-
-    if (strcmp(mySerialVal, "version") == 0)  showVersionLED();
-    if (strcmp(mySerialVal, "spin") == 0)  spinLED();
-
-
-    // if the first character is a B, a beats per minute from the other system
-    if (mySerialVal[0] == 'B')  {
-      String beatString = String(mySerialVal[1]) + String(mySerialVal[2]) + String(mySerialVal[3]);
-      // Serial.print("from other: ");
-      // Serial.println(beatString);
-
-      int rbeatValue = beatString.toInt();
-      rBPM = rbeatValue;
-      setRemoteLED(rbeatValue);
-    }
-    
-  }
-
-  ledFadeToBeat();
+    setLedColorLocal(red);
+    delay(500);
+    setLedColorLocal(blue);
+    delay(500);
+ 
+  // ledFadeToBeat();
   delay(20);                             //  take a break
 }
 

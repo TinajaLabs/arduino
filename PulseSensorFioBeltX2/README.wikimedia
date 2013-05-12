@@ -1,0 +1,5 @@
+== Heart Sync ==
+
+Code to run a pulse sensor amped on a FIO V3 and see the pulses on a digital LED strip (like adafruit's LED Belt Kit).
+
+Youtube video:  [http://www.youtube.com/watch?v=6v_glU5x6Mk]
